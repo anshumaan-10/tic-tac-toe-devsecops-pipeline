@@ -1,0 +1,30 @@
+# Backend egress network policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-egress-np
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: tic-tac-toe-backend
+  policyTypes:
+    - Egress
+  egress:
+    # Allow egress DNS traffic from the backend
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+    # Allow egress backend traffic to redis pod
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+      ports:
+        - protocol: TCP
+          port: {{ .Values.redis.containerPort }}

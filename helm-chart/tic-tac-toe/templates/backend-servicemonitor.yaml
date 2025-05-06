@@ -1,0 +1,19 @@
+# Backend ServiceMonitor for Prometheus
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: tic-tac-toe-backend-monitor
+  namespace: monitoring
+  labels:
+    release: prometheus-stack  # must match your Prometheus Helm release name
+spec:
+  selector:
+    matchLabels:
+      app: tic-tac-toe-backend  # must match your backend Service's label
+  endpoints:
+    - port: http                # must match the name: http in your Service's ports
+      path: /metrics            # Get metrics at backend /metrics
+      interval: 15s
+  namespaceSelector:
+    matchNames:
+      - default

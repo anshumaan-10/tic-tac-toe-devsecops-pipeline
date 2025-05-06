@@ -1,0 +1,54 @@
+# Redis k8s deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  revisionHistoryLimit: 1
+  replicas: {{ .Values.redis.replicaCount }}
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      podSecurityContext:
+        runAsUser: 1000 # App process inside container runs as User 1000 (non-root)
+        runAsGroup: 3000 # App process inside container belongs to Group 3000
+        fsGroup: 2000 # All mounted volumes inside pod are owned by Group 2000
+        runAsNonRoot: true # App must NOT run as root, Kubernetes enforces this
+      containers:
+        - name: redis
+          image: {{ .Values.redis.image }}
+          ports:
+            - containerPort: {{ .Values.redis.containerPort }}
+          resources:
+            requests:
+              cpu: "100m" # 100 millicores min
+              memory: "128Mi" # 1/8 GB ram min
+            limits:
+              cpu: "250m" # 250 millicores max
+              memory: "256Mi" # 1/4 GB ram max
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.redis.containerPort }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.redis.containerPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          securityContext:
+              readOnlyRootFilesystem: true # Container linux filesystem is read only
+          args: ["--requirepass", "$(REDIS_PASSWORD)"]
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: REDIS_PASSWORD

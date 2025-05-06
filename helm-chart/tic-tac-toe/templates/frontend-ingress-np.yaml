@@ -1,0 +1,24 @@
+# Frontend ingress network policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-ingress-np
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: tic-tac-toe-frontend  # Target frontend pods
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow ingress frontend traffic from tictactoe ingress
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: ingress-nginx
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: {{ .Values.frontend.containerPort}}
