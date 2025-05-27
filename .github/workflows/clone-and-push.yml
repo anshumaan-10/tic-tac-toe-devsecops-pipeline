@@ -22,8 +22,12 @@ jobs:
         env:
           DESTINATION_PAT: ${{ secrets.GHCR_TOKEN }}
         run: |
-          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-          echo "Pushing current branch: $CURRENT_BRANCH"
-          git remote add destination https://${DESTINATION_PAT}@github.com/anshumaan1017/web-app-pipeline.git
-          git push destination $CURRENT_BRANCH
-          git push destination --tags
+          git clone https://github.com/anshumaan-10/tic-tac-toe-devsecops-pipeline.git
+          git clone https://${DESTINATION_PAT}@github.com/anshumaan1017/web-app-pipeline.git
+          cd web-app-pipeline
+          cp -r ../tic-tac-toe-devsecops-pipeline/. .
+          git add .
+          git commit -m "this is my tic tac toe"
+          git push
+
+    
