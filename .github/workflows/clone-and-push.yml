@@ -1,6 +1,7 @@
 name: Clone and Push to Org Repo
 
 on:
+  push: 
   workflow_dispatch:
 
 jobs:
