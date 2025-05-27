@@ -29,9 +29,11 @@ jobs:
 
       - name: Copy and push code
         env:
-          DESTINATION_PAT: ${{ secrets.GHCR_TOKEN }}
+         DESTINATION_PAT: ${{ secrets.GHCR_TOKEN }}
         run: |
           cp -r tic-tac-toe-devsecops-pipeline/* web-app-pipeline/
           cd web-app-pipeline
           git add .
-          git commit -m "S
+          git commit -m "Sync from tic-tac-toe-devsecops-pipeline"
+          git push https://$DESTINATION_PAT@github.com/anshumaan1017/web-app-pipeline.git HEAD
+    
