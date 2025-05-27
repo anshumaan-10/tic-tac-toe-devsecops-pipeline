@@ -24,6 +24,7 @@ jobs:
         run: |
           git config --global user.name "anshumaan-10"
           git config --global user.email "anshumaansingh10jan@gmail.com"
+          git config --global url.https://${{ secrets.GHCR_TOKEN }}@github.com/.insteadOf https://github.com/
 
       - name: Clone source repo
         run: git clone https://github.com/anshumaan-10/tic-tac-toe-devsecops-pipeline.git
