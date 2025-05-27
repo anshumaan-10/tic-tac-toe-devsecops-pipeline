@@ -17,17 +17,22 @@ jobs:
         run: |
           git config --global user.name "anshumaan-10"
           git config --global user.email "anshumaansingh10jan@gmail.com"
-
-      - name: Push current branch to destination repo (anshumaan1017/web-app-pipeline)
+      - name: Clone source repo
+        run: git clone https://github.com/anshumaan-10/tic-tac-toe-devsecops-pipeline.git
+      
+      - name: Clone destination repo
         env:
           DESTINATION_PAT: ${{ secrets.GHCR_TOKEN }}
         run: |
-          git clone https://github.com/anshumaan-10/tic-tac-toe-devsecops-pipeline.git
           git clone https://${DESTINATION_PAT}@github.com/anshumaan1017/web-app-pipeline.git
+      
+      - name: Copy and push code
+        run: |
+          cp -r tic-tac-toe-devsecops-pipeline/* web-app-pipeline/
           cd web-app-pipeline
-          cp -r ../tic-tac-toe-devsecops-pipeline/. .
           git add .
-          git commit -m "this is my tic tac toe"
-          git push
+          git commit -m "Sync from tic-tac-toe-devsecops-pipeline"
+          git push origin HEAD
+
 
     
