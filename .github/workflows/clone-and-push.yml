@@ -38,6 +38,7 @@ jobs:
         env:
          DESTINATION_PAT: ${{ secrets.GHCR_TOKEN }}
         run: |
+          ls -larth
           cp -r tic-tac-toe-devsecops-pipeline/* web-app-pipeline/
           cd web-app-pipeline
           git add .
