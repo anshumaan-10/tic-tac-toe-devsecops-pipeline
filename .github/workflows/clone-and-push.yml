@@ -3,11 +3,11 @@ name: Clone and Push to Org Repo
 on:
   workflow_dispatch:
 
-jobs: 
+jobs:
   clone-and-push:
     runs-on: ubuntu-latest
 
-    steps: 
+    steps:
       - name: Checkout source repo
         uses: actions/checkout@v3
         with:
@@ -18,10 +18,12 @@ jobs:
           git config --global user.name "anshumaan-10"
           git config --global user.email "anshumaansingh10jan@gmail.com"
 
-      - name: Push to destination repo (anshumaan1017/web-app-pipeline)
+      - name: Push current branch to destination repo (anshumaan1017/web-app-pipeline)
         env:
           DESTINATION_PAT: ${{ secrets.GHCR_TOKEN }}
         run: |
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          echo "Pushing current branch: $CURRENT_BRANCH"
           git remote add destination https://${DESTINATION_PAT}@github.com/anshumaan1017/web-app-pipeline.git
-          git push destination --all
+          git push destination $CURRENT_BRANCH
           git push destination --tags
