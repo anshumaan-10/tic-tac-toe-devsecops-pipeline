@@ -22,6 +22,6 @@ jobs:
         env:
           DESTINATION_PAT: ${{ secrets.GHCR_TOKEN }}
         run: |
-          git remote add destination https://${GHCR_TOKEN}@github.com/anshumaan1017/web-app-pipeline.git
+          git remote add destination https://${DESTINATION_PAT}@github.com/anshumaan1017/web-app-pipeline.git
           git push destination --all
           git push destination --tags
